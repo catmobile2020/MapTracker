@@ -23,11 +23,25 @@ Route::get('/', function () {
     $gmaps = new GMaps($config);
     $gmaps->initialize($config);
 
+
+
     //add marker
-    $marker['position'] = '24.8873002,43.2711261';
+    $marker['position'] = '21.8873002,44.2711261';
     $marker['infowindow_content'] = 'Ayman';
-    $marker['icon'] = 'https://lh3.googleusercontent.com/proxy/FzZP28hGynqJTC--UcDBbbr3iJTJaQ_r_oDTgZ5priU5LeGK9302SBH4koMSxpMzSqcBbi6IBkd86jFj0NWcUaLA7-iqGsrq5w';
+
+    $marker2['position'] = '24.8873002,43.2711261';
+    $marker2['infowindow_content'] = 'Mohamed';
+
+    $marker3['position'] = '22.8873002,42.2711261';
+    $marker3['infowindow_content'] = 'Andrew';
+
+
     $gmaps->add_marker($marker);
+    $gmaps->add_marker($marker2);
+    $gmaps->add_marker($marker3);
     $map = $gmaps->create_map();
     return view('welcome')->with('map', $map);
 });
+
+
+Route::get('gmaps', 'CheckController@gmaps');
