@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\User;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -19,12 +20,13 @@ class MapEvent implements ShouldBroadcast
      *
      * @return void
      */
-    public $data;
+    public $locations;
 
-    public function __construct($data)
+    public function __construct($locations)
     {
-        $this->data = $data;
+        $this->locations = $locations;
     }
+
 
     /**
      * Get the channels the event should broadcast on.

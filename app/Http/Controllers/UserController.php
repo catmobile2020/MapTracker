@@ -50,7 +50,7 @@ class UserController extends Controller
        }
 
        $locations = User::has('checks')->with('checks')->get();
-
+        //return $locations;
        event(new MapEvent($locations));
        return response()->json(['message'=>'success']);
    }
