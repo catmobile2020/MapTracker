@@ -44,16 +44,23 @@
             lat: value.checks.latitude,
             lng: value.checks.longitude,
             title: value.checks.city,
+            id:value.id,
+            icon: value.image,
             click: function(e) {
 
                 Swal.fire(
-                    value.name,
-                    'This is '+value.checks.city+' Serving patient at '+ value.checks.updated_at,
-                    'question',
-                    1500
+                    {
+                        title:value.name,
+                    text:'This is '+value.checks.city+' Serving patient at '+ value.checks.updated_at,
+                    imageUrl:value.image,
+                        timer: 1500,
+                        showConfirmButton: false,
+                        showCancelButton: false,
+                    }
                 )
             }
         });
+
     });
 
     // Enable pusher logging - don't include this in production
@@ -66,32 +73,74 @@
 
     var channel = pusher.subscribe('map-channel');
     channel.bind('map-event', function(data) {
-        mymap.removeMarkers();
-        var locations = JSON.stringify(data.locations);
+            var locations = data.locations;
 
-        $.each( JSON.parse(locations), function( index, value ){
-            mymap.addMarker({
-                lat: value.checks.latitude,
-                lng: value.checks.longitude,
-                title: value.checks.city,
-                icon:'https://img.icons8.com/ios/50/000000/marker-storm--v1.png',
-                click: function(e) {
-
-                    Swal.fire(
-                        value.name,
-                        'This is '+value.checks.city+' Serving patient at '+ value.checks.updated_at,
-                        'question',
-                        1500
-                    )
+            mymap.markers.filter(function(m) {
+                 if(m.id === locations.id){
+                     console.log(m.id);
+                    m.setMap(null)
                 }
             });
-            Swal.fire({
-                position: 'top-end',
-                title: value.name +' Serving patient in ' +value.checks.city+ ' at '+ value.checks.updated_at,
-                showConfirmButton: false,
-                timer: 1500
-            })
-        });
+
+
+             mymap.addMarker({
+                 lat: locations.checks.latitude,
+                 lng: locations.checks.longitude,
+                 title: locations.checks.city,
+                 id:locations.id,
+                 icon:locations.image,
+                 click: function(e) {
+
+                     Swal.fire({
+                         title: locations.name,
+                         text: 'This is ' + locations.checks.city + ' Serving patient at ' + locations.checks.updated_at,
+                         imageUrl: locations.image,
+                         timer: 1500,
+                         showConfirmButton: false,
+                         showCancelButton: false,
+                     })
+                 }
+             });
+
+        Swal.fire({
+                     position: 'top-end',
+                     title: locations.name +' Serving patient in ' +locations.checks.city+ ' at '+ locations.checks.updated_at,
+                     showConfirmButton: false,
+                     imageUrl:locations.image,
+                     timer: 1500
+                 })
+
+       //  mymap.removeMarkers();
+       //  var locations = JSON.stringify(data.locations);
+       //
+       //  $.each( JSON.parse(locations), function( index, value ){
+       //      Swal.fire({
+       //          position: 'top-end',
+       //          title: value.name +' Serving patient in ' +value.checks.city+ ' at '+ value.checks.updated_at,
+       //          showConfirmButton: false,
+       //          imageUrl:value.image,
+       //          timer: 16500
+       //      })
+       //      mymap.addMarker({
+       //          lat: value.checks.latitude,
+       //          lng: value.checks.longitude,
+       //          title: value.checks.city,
+       //          label:value.id,
+       //          icon:value.image,
+       //          click: function(e) {
+       //
+       //              Swal.fire({
+       //                  title: value.name,
+       //                  text: 'This is ' + value.checks.city + ' Serving patient at ' + value.checks.updated_at,
+       //                  imageUrl: value.image,
+       //                  timer: 1500,
+       //                  showConfirmButton: false,
+       //                  showCancelButton: false,
+       //              })
+       //          }
+       //      });
+       //
+       //  });
     });
 
 

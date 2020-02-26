@@ -7,7 +7,10 @@ use App\Http\Requests\Api\RegisterRequest;
 use App\Http\Requests\Api\ResetPasswordRequest;
 use App\Http\Resources\AccountResource;
 use App\User;
+use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\URL;
+use Intervention\Image\Facades\Image;
 
 class AuthController extends Controller
 {
@@ -45,6 +48,12 @@ class AuthController extends Controller
      *         format="string",
      *         default="email@gmail.com",
      *      ),@SWG\Parameter(
+     *         name="image",
+     *         in="formData",
+     *         required=true,
+     *         type="file",
+     *         format="string",
+     *      ),@SWG\Parameter(
      *         name="password",
      *         in="formData",
      *         required=true,
@@ -63,7 +72,34 @@ class AuthController extends Controller
 
     public function register(RegisterRequest $request)
     {
+
+
         $user = User::create($request->all());
+        $image = Image::make($request->file('image'));
+        $image->encode('png');
+
+        /* if you want to have a perfect and complete circle using the whole width and height the image
+         must be shaped as as square. If your images are not guaranteed to be a square maybe you could
+         use Intervention's fit() function */
+        $image->fit(50,50);
+
+        // create empty canvas
+        $width = $image->getWidth();
+        $height = $image->getHeight();
+        $mask = Image::canvas($width, $height);
+
+        // draw a white circle
+        $mask->circle($width, $width/2, $height/2, function ($draw) {
+            $draw->background('#fff');
+        });
+
+        $image->mask($mask, false);
+        $path = "uploads/".$user->id."circled.png";
+        $image->save($path);
+
+        $user->image = $path;
+
+        $user->save();
         $token = auth()->login($user);
         return $this->respondWithToken($token);
     }

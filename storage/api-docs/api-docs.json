@@ -38,6 +38,13 @@
                         "default": "email@gmail.com"
                     },
                     {
+                        "name": "image",
+                        "in": "formData",
+                        "required": true,
+                        "type": "file",
+                        "format": "string"
+                    },
+                    {
                         "name": "password",
                         "in": "formData",
                         "required": true,
@@ -145,6 +152,75 @@
                     "auth"
                 ],
                 "summary": "refreshes expired token",
+                "responses": {
+                    "200": {
+                        "description": "message"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "402": {
+                        "description": "Validation Error"
+                    },
+                    "403": {
+                        "description": "Forbidden The client did not have permission to access the requested resource."
+                    }
+                },
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ]
+            }
+        },
+        "/check/{user}/add": {
+            "post": {
+                "tags": [
+                    "Check in"
+                ],
+                "summary": "logout currently logged in user",
+                "parameters": [
+                    {
+                        "name": "user",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer",
+                        "format": "integer",
+                        "default": "1"
+                    },
+                    {
+                        "name": "city",
+                        "in": "formData",
+                        "required": true,
+                        "type": "string",
+                        "format": "string",
+                        "default": "Jeddah"
+                    },
+                    {
+                        "name": "address",
+                        "in": "formData",
+                        "required": true,
+                        "type": "string",
+                        "format": "string",
+                        "default": "Jeddah, Tihamah, Saudi Arabia\t"
+                    },
+                    {
+                        "name": "latitude",
+                        "in": "formData",
+                        "required": true,
+                        "type": "string",
+                        "format": "string",
+                        "default": "21.543333"
+                    },
+                    {
+                        "name": "longitude",
+                        "in": "formData",
+                        "required": true,
+                        "type": "string",
+                        "format": "string",
+                        "default": "39.172779"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "message"

@@ -18,10 +18,7 @@ class AccountResource extends JsonResource
             'id' =>$this->id,
             'name' =>$this->name,
             'email' =>$this->email,
-            'active' => (boolean)$this->active,
-            'type' =>$this->type,
-            'bio' =>$this->bio,
-            'photo' =>$this->photo,
+            'image' =>$this->image,
         ];
     }
 }
